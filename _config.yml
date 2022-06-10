@@ -38,7 +38,7 @@ plugins:
 plainwhite:
   name: Byoungyoon Park
   tagline: Student
-  date_format: "%b %-d, %Y"
+  # date_format: "%b %-d, %Y"
   
   social_links:
     github: rustiebeats
