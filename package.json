@@ -5,7 +5,8 @@
   "scripts": {
     "build": "eleventy",
     "server": "eleventy --serve",
-    "clean": "rm -rf _site"
+    "clean": "rm -rf _site",
+    "test": "node --test"
   },
   "dependencies": {
     "@11ty/eleventy": "^3.0.0"

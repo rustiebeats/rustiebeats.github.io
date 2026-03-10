@@ -1,3 +1,5 @@
+const { dateFormat, head } = require("./src/_utils/filters");
+
 module.exports = function (eleventyConfig) {
   eleventyConfig.addPassthroughCopy("src/css");
   eleventyConfig.addPassthroughCopy("src/fonts");
@@ -8,20 +10,8 @@ module.exports = function (eleventyConfig) {
     api.getFilteredByGlob("src/posts/*.md").reverse()
   );
 
-  eleventyConfig.addFilter("head", (array, n) => {
-    if (!Array.isArray(array) || !array.length) return [];
-    return n < 0 ? array.slice(n) : array.slice(0, n);
-  });
-
-  eleventyConfig.addFilter("dateFormat", (date) => {
-    if (!date) return "";
-    return new Date(date).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-      timeZone: "UTC",
-    });
-  });
+  eleventyConfig.addFilter("head", head);
+  eleventyConfig.addFilter("dateFormat", dateFormat);
 
   return {
     templateFormats: ["md", "njk", "html"],
