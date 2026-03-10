@@ -5,51 +5,48 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Commands
 
 ```bash
-npm run server    # Start local dev server (with BrowserSync live reload)
-npm run build     # Generate static files to public/
-npm run clean     # Clear cache and public/ directory
-npm run deploy    # Build and deploy to GitHub Pages (rustiebeats.github.io)
+npm run server    # Start local dev server with live reload
+npm run build     # Generate static files to _site/
+npm run clean     # Remove _site/ directory
 ```
 
-New post: `npx hexo new post "Post Title"` — creates `source/_posts/Post-Title.md` with an asset folder.
-New draft: `npx hexo new draft "Draft Title"` — creates `source/_drafts/Draft-Title.md`.
-Publish draft: `npx hexo publish draft "Draft Title"`
+New post: create `src/posts/my-post-title.md` with front matter (see below).
 
 ## Architecture
 
-This is a **Hexo 6** static blog deployed to GitHub Pages at `rustiebeats.github.io`.
+This is an **11ty (Eleventy) v3** static blog deployed to GitHub Pages at `rustiebeats.github.io`.
 
-- `source/_posts/` — published Markdown posts
-- `source/_drafts/` — unpublished drafts (`render_drafts: false` in `_config.yml`)
-- `themes/minima/` — custom theme (EJS templates + CSS)
-- `public/` — generated output (not committed)
+- `src/posts/` — Markdown posts
+- `src/` — Nunjucks page templates (`index.njk`, `blog/index.njk`)
+- `src/_includes/layouts/` — base.njk, post.njk, page.njk
+- `src/_includes/partials/` — header.njk, footer.njk
+- `src/_data/site.js` — site-wide config (title, owner, menu, theme color, social links)
+- `src/css/`, `src/fonts/`, `src/images/`, `src/js/` — static assets (passthrough copied)
+- `_site/` — generated output (not committed)
 
-### Theme: minima
+### Config: `.eleventy.js`
 
-The theme uses EJS templates. Key files:
-- `themes/minima/layout/layout.ejs` — base HTML shell; loads CSS, nanobar, GA, partials
-- `themes/minima/layout/partial/header.ejs` / `footer.ejs` — nav and social links
-- `themes/minima/layout/post.ejs`, `index.ejs`, `archive.ejs`, `tag.ejs`, `page.ejs`
-- `themes/minima/source/css/custom.css` — primary styling (skeleton CSS framework base)
-- `themes/minima/_config.yml` — theme settings: title, owner, menu, accent color (`tcolor`), social links, max posts on index
+Sets input=`src`, output=`_site`. Passthrough copies static assets. Defines `posts` collection (reverse-chronological). Adds `dateFormat` and `head` filters.
 
-### Configuration
+### Posts
 
-Two config files:
-- `_config.yml` — site-level: URL (`https://rustiebeats.github.io/`), deploy target, prism.js syntax highlighting, permalink format
-- `themes/minima/_config.yml` — theme-level: header title, nav menu, accent color, footer social links
+`src/posts/posts.11tydata.js` provides default layout (`layouts/post.njk`), tag (`posts`), and a computed date-based permalink: `YYYY/MM/DD/slug/`.
+
+Post front matter:
+```yaml
+---
+title: My Post Title
+date: 2024-01-15
+tags:
+  - posts
+  - optional-tag
+---
+```
+
+### Theme
+
+CSS uses the Skeleton framework (12-column grid, 550px breakpoint). Dark mode is toggled via `body.darkmode` class with localStorage persistence. Accent color is set from `site.tcolor` as an inline `<style>` block in `base.njk`. Theme config lives in `src/_data/site.js`.
 
 ### Deployment
 
-Deploys via `hexo-deployer-git` to `git@github.com:rustiebeats/rustiebeats.github.io.git` (branch: `master`). Run `npm run deploy` after changes.
-
-### Post Front Matter
-
-```yaml
----
-title: Post Title
-date: 2024-01-01
-tags: [tag1, tag2]
-thumbnail: /images/image.jpg  # optional, used for OG/Twitter cards
----
-```
+GitHub Actions (`.github/workflows/build.yml`) builds with Node 20 and deploys `_site/` to the `gh-pages` branch via `peaceiris/actions-gh-pages`. GitHub Pages is configured to serve from the `gh-pages` branch.

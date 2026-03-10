@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="utf-8">
+
+  {% set pageTitle %}{% if title %}{{ title }}{% else %}{{ site.title }}{% endif %}{% endset %}
+  <title>{{ pageTitle | trim }}</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="{{ site.author }}">
+
+  {% if description %}
+  <meta name="description" content="{{ description }}">
+  {% else %}
+  <meta name="description" content="{{ site.description }}">
+  {% endif %}
+
+  <meta property="og:site_name" content="{{ site.title }}" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="{{ pageTitle | trim }}" />
+  <meta property="og:url" content="{{ page.url }}" />
+  {% if thumbnail %}
+  <meta property="og:image" content="{{ site.url }}{{ thumbnail }}">
+  <meta name="twitter:image" content="{{ site.url }}{{ thumbnail }}">
+  {% else %}
+  <meta property="og:image" content="{{ site.url }}/images/thumbnail.jpg">
+  <meta name="twitter:image" content="{{ site.url }}/images/thumbnail.jpg">
+  {% endif %}
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ pageTitle | trim }}">
+
+  <link rel="preload" href="/fonts/dm-serif-display-v4-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/inter-v2-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
+
+  <link rel="stylesheet" href="/css/normalize.css">
+  <link rel="stylesheet" href="/css/skeleton.css">
+  <link rel="stylesheet" href="/css/custom.css">
+  <link rel="stylesheet" href="/css/prism-dark.css">
+  <link rel="stylesheet" href="/css/prism-line-numbers.css">
+
+  <link rel="icon" type="image/png" href="/images/favicon.png">
+
+  <style>
+    a:not(.icon) {
+      text-decoration-color: #{{ site.tcolor }};
+      background-image: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0) 50%,
+        #{{ site.tcolor }} 50%
+      );
+    }
+    blockquote {
+      border-left: 8px solid #{{ site.tcolor }};
+    }
+    .nanobar .bar {
+      background: #{{ site.tcolor }};
+    }
+    .button.button-primary:hover,
+    button.button-primary:hover,
+    input[type="submit"].button-primary:hover,
+    input[type="reset"].button-primary:hover,
+    input[type="button"].button-primary:hover,
+    .button.button-primary:focus,
+    button.button-primary:focus,
+    input[type="submit"].button-primary:focus,
+    input[type="reset"].button-primary:focus,
+    input[type="button"].button-primary:focus {
+      background-color: #{{ site.tcolor }};
+      border-color: #{{ site.tcolor }};
+    }
+    input[type="email"]:focus,
+    input[type="number"]:focus,
+    input[type="search"]:focus,
+    input[type="text"]:focus,
+    input[type="tel"]:focus,
+    input[type="url"]:focus,
+    input[type="password"]:focus,
+    textarea:focus,
+    select:focus {
+      border: 1px solid #{{ site.tcolor }};
+    }
+  </style>
+
+</head>
+
+<body>
+  <div class="container">
+    <div class="row">
+      <div>
+
+        {% include "partials/header.njk" %}
+        <div class="trans">
+          {{ content | safe }}
+          {% include "partials/footer.njk" %}
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <script src="/js/nanobar.min.js"></script>
+  <script>
+    var options = {
+      classname: 'nanobar',
+      id: 'myNanobar'
+    };
+    var nanobar = new Nanobar(options);
+    nanobar.go(30);
+    nanobar.go(76);
+    nanobar.go(100);
+  </script>
+
+</body>
+</html>

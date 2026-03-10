@@ -1,9 +1,9 @@
 <div class="row">
   <div class="two columns" style="max-width: 50px">
     <h1 class="mt-2 mode">
-      <div onclick=setDarkMode(true) id="darkBtn"><%= theme.switch_dark %></div>
-      <div onclick=setDarkMode(false) id="lightBtn" class=hidden><%= theme.switch_light %></div>
-      <script >
+      <div onclick="setDarkMode(true)" id="darkBtn">{{ site.switch_dark }}</div>
+      <div onclick="setDarkMode(false)" id="lightBtn" class="hidden">{{ site.switch_light }}</div>
+      <script>
         if (localStorage.getItem('preferredTheme') == 'dark') {
           setDarkMode(true)
         }
@@ -13,13 +13,14 @@
           if (isDark) {
             lightBtn.style.display = "block"
             darkBtn.style.display = "none"
+            document.body.classList.add("darkmode");
             localStorage.setItem('preferredTheme', 'dark');
           } else {
             lightBtn.style.display = "none"
             darkBtn.style.display = "block"
+            document.body.classList.remove("darkmode");
             localStorage.removeItem('preferredTheme');
           }
-          document.body.classList.toggle("darkmode");
         }
       </script>
     </h1>
@@ -27,26 +28,20 @@
 
   <div class="six columns ml-1">
     <h1 class="mt-2">
-      <%= theme.title %>
+      {{ site.header_title }}
     </h1>
   </div>
 
   <div class="twelve columns">
     <div class="row">
       <div class="nine columns left">
-        <a href="<%= config.root %>">Home</a>
-        <% for (name in theme.menu) { %>
-          <% if (theme.menu[name]) { %>
-          <a href="<%- url_for(theme.menu[name]) %>" class="ml"><%- name %></a>
-          <% } %>
-        <% } %>
-        <% if (theme.email) { %>
-          <% if (typeof obfuscate === "function") { %>
-            <a href="mailto:<%- obfuscate(theme.email) %>" target="_blank" class="ml">Email</a>
-          <% } else { %>
-            <a href="mailto:<%= theme.email %>" target="_blank" class="ml">Email</a>
-          <% } %>
-        <% } %>
+        <a href="/">Home</a>
+        {% for name, url in site.menu %}
+          <a href="{{ url }}" class="ml">{{ name }}</a>
+        {% endfor %}
+        {% if site.email %}
+          <a href="mailto:{{ site.email }}" target="_blank" class="ml">Email</a>
+        {% endif %}
       </div>
     </div>
     <hr style="margin-bottom: 2.6rem">
